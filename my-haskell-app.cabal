@@ -1,0 +1,47 @@
+cabal-version:      3.0
+name:               my-haskell-app
+version:            0.1.0.0
+synopsis:           REST API server with Servant
+description:        A simple REST API server built with Servant
+homepage:           https://github.com/githubuser/my-haskell-app#readme
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Author name here
+maintainer:         example@example.com
+copyright:          2025 Author name here
+category:           Web
+build-type:         Simple
+extra-source-files: README.md
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  Lib
+                    , Api
+    build-depends:    base ^>=4.17.2.1
+                    , servant-server
+                    , warp
+                    , aeson
+                    , text
+                    , bytestring
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable my-haskell-app-exe
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:    base ^>=4.17.2.1
+                    , my-haskell-app
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+test-suite my-haskell-app-test
+    import:           warnings
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    build-depends:    base ^>=4.17.2.1
+                    , my-haskell-app
