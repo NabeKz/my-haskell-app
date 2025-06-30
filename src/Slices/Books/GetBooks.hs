@@ -10,28 +10,21 @@ import Slices.Books.Types
 -- API Definition
 type GetBooksAPI = "books" :> Get '[JSON] [Book]
 
--- Repository Interface
-class BookRepository m where
-  getAllBooks :: m [Book]
+-- Repository Type Alias for DI
+type GetAllBooks = IO (BookResult [Book])
 
 -- In-Memory Repository Implementation
-data InMemoryBookRepo = InMemoryBookRepo
-
-instance BookRepository IO where
-  getAllBooks =
-    return
+getAllBooksInMemory :: GetAllBooks
+getAllBooksInMemory =
+  return $
+    Right
       [ Book (BookId 1) "Functional Programming in Haskell"
       ]
 
--- Business Logic (Service) with DI
-getAllBooksService :: (Monad m, BookRepository m) => m (BookResult [Book])
-getAllBooksService = do
-  Right <$> getAllBooks
-
--- HTTP Handler
-getBooksHandler :: Handler [Book]
-getBooksHandler = do
-  result <- liftIO (getAllBooksService :: IO (BookResult [Book]))
+-- HTTP Handler with DI
+getBooksHandler :: GetAllBooks -> Handler [Book]
+getBooksHandler getAllBooksRepo = do
+  result <- liftIO getAllBooksRepo
   case result of
     Left _ -> throwError err500 {errBody = L8.pack "Internal server error"}
     Right books -> return books

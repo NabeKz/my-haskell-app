@@ -18,7 +18,7 @@ api = Proxy
 
 -- Combined server from all slice handlers
 server :: Server API
-server = getUsersHandler :<|> postUserHandler :<|> getUserHandler :<|> getBooksHandler
+server = getUsersHandler :<|> postUserHandler :<|> getUserHandler :<|> getBooksHandler getAllBooksInMemory
 
 -- WAI Application
 app :: Application
