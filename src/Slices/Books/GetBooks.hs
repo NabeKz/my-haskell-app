@@ -3,6 +3,7 @@
 
 module Slices.Books.GetBooks where
 
+import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Lazy.Char8 as L8
 import Servant
 import Slices.Books.Types
@@ -28,5 +29,3 @@ getBooksHandler getAllBooksRepo = do
   case result of
     Left _ -> throwError err500 {errBody = L8.pack "Internal server error"}
     Right books -> return books
-  where
-    liftIO = liftIO
