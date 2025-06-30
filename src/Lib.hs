@@ -28,8 +28,14 @@ getUser uid = return $ User uid "User" "user@example.com"
 getHealth :: Handler String
 getHealth = return "OK"
 
+getBooks :: Handler [Book]
+getBooks =
+  return
+    [ Book 1 "hoge"
+    ]
+
 app :: Application
 app = serve api server
 
 server :: Server API
-server = getUsers :<|> postUser :<|> getUser :<|> getHealth
+server = getUsers :<|> postUser :<|> getUser :<|> getHealth :<|> getBooks

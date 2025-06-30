@@ -15,7 +15,15 @@ data User = User
   }
   deriving (Eq, Show, Generic)
 
+data Book = Book
+  { bookId :: Int,
+    bookName :: String
+  }
+  deriving (Eq, Show, Generic)
+
 instance ToJSON User
+
+instance ToJSON Book
 
 instance FromJSON User
 
@@ -24,6 +32,7 @@ type API =
     :<|> "users" :> ReqBody '[JSON] User :> Post '[JSON] User
     :<|> "users" :> Capture "id" Int :> Get '[JSON] User
     :<|> "health" :> Get '[JSON] String
+    :<|> "books" :> Get '[JSON] [Book]
 
 api :: Proxy API
 api = Proxy
