@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Api where
@@ -9,14 +10,14 @@ import GHC.Generics
 import Servant
 
 data User = User
-  { userId :: Int,
+  { id :: Int,
     userName :: String,
     userEmail :: String
   }
   deriving (Eq, Show, Generic)
 
 data Book = Book
-  { bookId :: Int,
+  { id :: Int,
     bookName :: String
   }
   deriving (Eq, Show, Generic)
