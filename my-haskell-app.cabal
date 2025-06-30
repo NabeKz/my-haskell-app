@@ -18,18 +18,14 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Lib
-                    , Domain.Common
-                    , Domain.User
-                    , Domain.Book
-                    , Application.Types
-                    , Application.UserService
-                    , Application.BookService
-                    , Infrastructure.Api.UserApi
-                    , Infrastructure.Api.BookApi
-                    , Infrastructure.Api.HealthApi
-                    , Infrastructure.Repository.UserRepository
-                    , Infrastructure.Repository.BookRepository
+    exposed-modules:  Server
+                    , Shared.Types
+                    , Shared.AppHandler
+                    , Slices.Users.GetUsers
+                    , Slices.Users.GetUser
+                    , Slices.Users.PostUser
+                    , Slices.Books.GetBooks
+                    , Slices.Health.GetHealth
     build-depends:    base ^>=4.18.0.0
                     , servant-server
                     , warp
@@ -45,6 +41,7 @@ executable my-haskell-app-exe
     main-is:          Main.hs
     build-depends:    base ^>=4.18.0.0
                     , my-haskell-app
+                    , warp
     hs-source-dirs:   app
     default-language: Haskell2010
 

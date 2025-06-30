@@ -1,6 +1,7 @@
 module Main (main) where
 
-import Lib
+import Network.Wai.Handler.Warp (run)
+import Server (app)
 
 main :: IO ()
 main = do
@@ -9,5 +10,6 @@ main = do
   putStrLn "  GET  /users      - Get all users"
   putStrLn "  POST /users      - Create a new user"
   putStrLn "  GET  /users/:id  - Get user by ID"
+  putStrLn "  GET  /books      - Get all books"
   putStrLn "  GET  /health     - Health check"
-  startApp
+  run 8080 app
