@@ -4,8 +4,8 @@
 module Slices.Users.GetUser where
 
 import Servant
-import Shared.AppHandler
-import Shared.Types
+import Slices.Users.Types
+import qualified Data.ByteString.Lazy.Char8 as L8
 
 -- API Definition
 type GetUserAPI = "users" :> Capture "id" Int :> Get '[JSON] User
@@ -18,7 +18,7 @@ getUserByIdFromRepo (UserId uid) = return $ case uid of
   _ -> Nothing
 
 -- Business Logic (Service)
-getUserByIdService :: UserId -> IO (AppResult User)
+getUserByIdService :: UserId -> IO (UserResult User)
 getUserByIdService userId = do
   maybeUser <- getUserByIdFromRepo userId
   case maybeUser of
@@ -29,5 +29,13 @@ getUserByIdService userId = do
 getUserHandler :: Int -> Handler User
 getUserHandler uid = do
   result <- liftIO $ getUserByIdService (UserId uid)
-  handleResult result
-  where liftIO = liftIO
+  case result of
+    Left (UserNotFound _) -> throwError err404 { errBody = L8.pack "User not found" }
+    Left _ -> throwError err500 { errBody = L8.pack "Internal server error" }
+    Right user -> return user
+  where
+    liftIO = liftIO
+    throwError = throwError
+    err404 = err404
+    err500 = err500
+    errBody = errBody

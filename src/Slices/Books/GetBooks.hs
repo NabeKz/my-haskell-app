@@ -4,8 +4,8 @@
 module Slices.Books.GetBooks where
 
 import Servant
-import Shared.AppHandler
-import Shared.Types
+import Slices.Books.Types
+import qualified Data.ByteString.Lazy.Char8 as L8
 
 -- API Definition
 type GetBooksAPI = "books" :> Get '[JSON] [Book]
@@ -17,7 +17,7 @@ getAllBooksFromRepo = return
   ]
 
 -- Business Logic (Service)
-getAllBooksService :: IO (AppResult [Book])
+getAllBooksService :: IO (BookResult [Book])
 getAllBooksService = do
   books <- getAllBooksFromRepo
   return $ Right books
@@ -26,5 +26,11 @@ getAllBooksService = do
 getBooksHandler :: Handler [Book]
 getBooksHandler = do
   result <- liftIO getAllBooksService
-  handleResult result
-  where liftIO = liftIO
+  case result of
+    Left _ -> throwError err500 { errBody = L8.pack "Internal server error" }
+    Right books -> return books
+  where
+    liftIO = liftIO
+    throwError = throwError
+    err500 = err500
+    errBody = errBody

@@ -4,8 +4,8 @@
 module Slices.Users.GetUsers where
 
 import Servant
-import Shared.AppHandler
-import Shared.Types
+import Slices.Users.Types
+import qualified Data.ByteString.Lazy.Char8 as L8
 
 -- API Definition
 type GetUsersAPI = "users" :> Get '[JSON] [User]
@@ -18,7 +18,7 @@ getAllUsersFromRepo = return
   ]
 
 -- Business Logic (Service)
-getAllUsersService :: IO (AppResult [User])
+getAllUsersService :: IO (UserResult [User])
 getAllUsersService = do
   users <- getAllUsersFromRepo
   return $ Right users
@@ -27,5 +27,11 @@ getAllUsersService = do
 getUsersHandler :: Handler [User]
 getUsersHandler = do
   result <- liftIO getAllUsersService
-  handleResult result
-  where liftIO = liftIO
+  case result of
+    Left _ -> throwError err500 { errBody = L8.pack "Internal server error" }
+    Right users -> return users
+  where 
+    liftIO = liftIO
+    throwError = throwError
+    err500 = err500
+    errBody = errBody
